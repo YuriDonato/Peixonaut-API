@@ -3,7 +3,7 @@ from flask_cors import CORS
 from routes import members, hora, economic_events, btc_usdt
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}}) 
 
 # Registrar os blueprints de cada rota
 app.register_blueprint(members.bp)
