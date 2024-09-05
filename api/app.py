@@ -4,9 +4,18 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 import cloudscraper
+import random
+import time
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://peixonaut.vercel.app/"]}})
+
+USER_AGENTS = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
+    'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:90.0) Gecko/20100101 Firefox/90.0',
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Mobile/15E148 Safari/604.1'
+]
 
 # Rota para membros
 @app.route('/members')
@@ -67,12 +76,20 @@ def get_events_by_currency(currency):
     filtered_events = [event for event in events if event['moeda'] == currency.upper()]
     return jsonify(filtered_events)
 
-# Função para fazer o scraping do preço de BTC/USD
+# Função para rotacionar os User-Agents e utilizar uma sessão persistente
 def scrape_btc_usd_price():
     url = 'https://br.investing.com/crypto/bitcoin/btc-usd'
-    scraper = cloudscraper.create_scraper()  # cloudscraper é compatível com Cloudflare
+    scraper = cloudscraper.create_scraper()
+    headers = {
+        'User-Agent': random.choice(USER_AGENTS)  # Rotaciona o User-Agent
+    }
     
     try:
+        # Delay para evitar bloqueio
+        time.sleep(2)
+        
+        # Persistência da sessão e requisição com headers rotacionados
+        scraper.headers.update(headers)
         page = scraper.get(url)
         soup = BeautifulSoup(page.content, 'html.parser')
 
@@ -86,8 +103,7 @@ def scrape_btc_usd_price():
     except Exception as e:
         print(f"Erro ao capturar o preço: {e}")
         return None
-
-# Rota para obter o preço atual do BTC/USD
+    
 @app.route('/market/btcusd/currentprice', methods=['GET'])
 def current_btc_usd_price():
     price = scrape_btc_usd_price()
