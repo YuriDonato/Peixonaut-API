@@ -7,11 +7,11 @@ app = Flask(__name__)
 # Habilitar o CORS para permitir requisições do React
 CORS(app)
 
-@app.route('/api/members')
+@app.route('/members')
 def members():
     return jsonify({'members': ['member1', 'member2', 'member34']})
 
-@app.route('/api/hora')
+@app.route('/hora')
 def hora():
     # Retorna a hora atual com segundos
     now = datetime.now()
