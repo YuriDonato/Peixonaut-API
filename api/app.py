@@ -1,20 +1,5 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-<<<<<<< HEAD
-import members
-import hora
-import economic_events
-import btc_usdt
-
-app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
-
-# Register the blueprints
-app.register_blueprint(members.bp)
-app.register_blueprint(hora.bp)
-app.register_blueprint(economic_events.bp)
-app.register_blueprint(btc_usdt.bp)
-=======
 from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
@@ -84,7 +69,6 @@ def get_events_by_currency(currency):
     events = scrape_economic_events()
     filtered_events = [event for event in events if event['moeda'] == currency.upper()]
     return jsonify(filtered_events)
->>>>>>> parent of 3749578 (rebuilding routes and created the btc price)
 
 if __name__ == '__main__':
     app.run()
