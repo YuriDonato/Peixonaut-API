@@ -1,3 +1,6 @@
+import sys
+sys.path.append('api/routes')
+
 from flask import Flask
 from flask_cors import CORS
 from routes import members, hora, economic_events, btc_usdt
