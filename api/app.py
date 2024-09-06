@@ -8,7 +8,7 @@ import random
 import time
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://peixonaut.vercel.app/"]}})
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 USER_AGENTS = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
